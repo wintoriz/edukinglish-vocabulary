@@ -3,99 +3,1115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edukinglish - Glosario Interactivo</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6fa; color: #333; margin: 0; padding: 20px; }
-        .container { max-width: 1000px; margin: 0 auto; text-align: center; }
-        h1 { color: #2b497d; margin-bottom: 5px; }
-        p.subtitle { color: #666; margin-bottom: 30px; }
-        
-        /* Barra de búsqueda */
-        .search-box { margin-bottom: 30px; }
-        .search-box input { width: 100%; max-width: 400px; padding: 12px 20px; font-size: 16px; border: 2px solid #dbe2f9; border-radius: 25px; outline: none; transition: 0.3s; }
-        .search-box input:focus { border-color: #2b497d; }
-
-        /* Cuadrícula de tarjetas */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; text-align: left; }
-        .card { background: white; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow: hidden; transition: transform 0.2s; display: flex; flex-direction: column; }
-        .card:hover { transform: translateY(-5px); }
-        
-        .card-img { width: 100%; height: 180px; background-color: #eef2f9; display: flex; align-items: center; justify-content: center; color: #888; font-size: 14px; }
-        /* Si usas las láminas que generamos, puedes poner la URL de la imagen aquí */
-        .card-img img { width: 100%; height: 100%; object-fit: cover; }
-
-        .card-content { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .word-en { font-size: 18px; font-weight: bold; color: #2b497d; margin: 0 0 5px 0; }
-        .word-es { font-size: 15px; color: #555; margin: 0 0 10px 0; }
-        .badge { display: inline-block; background-color: #dbe2f9; color: #2b497d; font-size: 12px; padding: 4px 8px; border-radius: 6px; font-weight: bold; align-self: flex-start; }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <h1>Edukinglish Vocabulary Hub</h1>
-    <p class="subtitle">Consulta interactiva de las lecciones y láminas oficiales</p>
-
-    <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Busca una palabra (ej. supermarket, budget, heart)..." onkeyup="filterVocabulary()">
-    </div>
-
-    <div class="grid" id="vocabGrid">
-        <!-- Tarjeta de ejemplo 1 -->
-        <div class="card" data-word="supermarket cajero groceries">
-            <div class="card-content">
-                <div>
-                    <span class="badge">The Money Mission</span>
-                    <p class="word-en">SUPERMARKET</p>
-                    <p class="word-es"><strong>Español:</strong> Supermercado</p>
-                </div>
-                <p style="font-size: 13px; color: #777; margin: 10px 0 0 0;">Ej: *Dogito is at the supermarket.*</p>
-            </div>
-        </div>
-
-        <!-- Tarjeta de ejemplo 2 -->
-        <div class="card" data-word="budget presupuestar money">
-            <div class="card-content">
-                <div>
-                    <span class="badge">The Money Mission</span>
-                    <p class="word-en">TO BUDGET</p>
-                    <p class="word-es"><strong>Español:</strong> Presupuestar</p>
-                </div>
-                <p style="font-size: 13px; color: #777; margin: 10px 0 0 0;">Ej: *He tracks expenses on a budget sheet.*</p>
-            </div>
-        </div>
-
-        <!-- Tarjeta de ejemplo 3 -->
-        <div class="card" data-word="goggles laboratorio scientist">
-            <div class="card-content">
-                <div>
-                    <span class="badge">Mad Scientists</span>
-                    <p class="word-en">GOGGLES</p>
-                    <p class="word-es"><strong>Español:</strong> Gafas protectoras</p>
-                </div>
-                <p style="font-size: 13px; color: #777; margin: 10px 0 0 0;">Ej: *Dr. Mooney puts on her goggles.*</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    function filterVocabulary() {
-        let input = document.getElementById('searchInput').value.toLowerCase();
-        let cards = document.getElementsByClassName('card');
-
-        for (let i = 0; i < cards.length; i++) {
-            let keywords = cards[i].getAttribute('data-word');
-            let text = cards[i].innerText.toLowerCase();
-            
-            if (keywords.includes(input) || text.includes(input)) {
-                cards[i].style.display = "";
-            } else {
-                cards[i].style.display = "none";
+    <title>Edukinglish Vocabulary Hub</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tipografía Fredoka (títulos amigables) e Inter (lectura clara) -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        eduNavy: '#2b497d',
+                        eduNavyDark: '#1e355c',
+                        eduLavender: '#dbe2f9',
+                        eduLavenderLight: '#eef2fc',
+                        eduYellow: '#ffb703',
+                        eduYellowHover: '#e5a400',
+                        eduMint: '#2a9d8f',
+                    },
+                    fontFamily: {
+                        display: ['Fredoka', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
             }
         }
-    }
-</script>
+    </script>
 
+    <style>
+        body {
+            background-color: #f4f7fc;
+            font-family: 'Inter', sans-serif;
+            color: #1e293b;
+        }
+
+        h1, h2, h3, .font-display {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        /* =========================================================
+           TÉCNICA DE RECORTE AUTOMÁTICO (CSS SPRITE 3x2)
+           Permite usar las láminas completas de 6 viñetas sin recortar
+           ========================================================= */
+        .sprite-window {
+    width: 100%;
+    aspect-ratio: 4 / 3; /* Mantiene la proporción natural exacta de la ilustración */
+    max-height: 220px;
+    overflow: hidden;
+    position: relative;
+    border-radius: 10px;
+    background-color: #eef2f9;
+    margin: 0 auto;
+}
+
+        /* La imagen completa de 3 columnas x 2 filas se escala para encuadrar 
+           únicamente la ilustración superior de cada viñeta (sin cortar personajes) */
+        .sprite-crop {
+    position: absolute;
+    width: 325%;  /* Ajuste fino del ancho para encuadrar solo el dibujo */
+    height: 295%; /* Zoom vertical suave para ocultar la franja de texto inferior */
+    max-width: none;
+    object-fit: cover;
+}
+
+        /* Coordenadas exactas de las 3 columnas (col 0, 1, 2) */
+        .sprite-col-0 { left: -2.2%; }
+        .sprite-col-1 { left: -109%; }
+        .sprite-col-2 { left: -215.8%; }
+
+        /* Coordenadas exactas de las 2 filas (row 0, 1), encuadrando la ilustración */
+        .sprite-row-0 { top: -27.5%; }
+        .sprite-row-1 { top: -140%; }
+
+        /* Efecto 3D para Flip Flashcards */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 1.25rem;
+        }
+
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+
+        .animate-shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.35s ease-out forwards;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- ENCABEZADO PRINCIPAL -->
+    <header class="bg-eduNavy text-white shadow-lg sticky top-0 z-30">
+        <div class="max-w-6xl mx-auto px-4 py-3.5 flex flex-col md:flex-row items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-2xl bg-eduYellow text-eduNavy flex items-center justify-center shadow-md shrink-0">
+                    <!-- Icono corona SVG -->
+                    <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl sm:text-3xl font-bold tracking-tight leading-none">
+                        Edukinglish <span class="text-eduYellow">Vocabulary Hub</span>
+                    </h1>
+                    <p class="text-xs sm:text-sm text-eduLavender mt-1">
+                        Kingly, Mooney, Dogito & Mrs. Neigh • Visual Learning Center
+                    </p>
+                </div>
+            </div>
+
+            <!-- Controles de imágenes locales y estrellas -->
+            <div class="flex flex-wrap items-center justify-center gap-2.5">
+                <!-- Botón para cargar láminas locales al instante en la vista previa -->
+                <label class="cursor-pointer bg-eduMint hover:bg-teal-600 text-white px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-all flex items-center gap-2">
+                    <span>📂</span>
+                    <span>Cargar mis láminas locales</span>
+                    <input type="file" id="localSheetsInput" multiple accept="image/*" class="hidden" onchange="handleLocalImages(event)">
+                </label>
+
+                <!-- Botón desplegable de guía para GitHub -->
+                <button onclick="toggleGuide()" class="bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold border border-white/15 transition-colors">
+                    ⚙️ Guía GitHub
+                </button>
+
+                <!-- Contador de Edu-Stars -->
+                <div class="flex items-center gap-2.5 bg-eduNavyDark/90 px-3.5 py-1.5 rounded-xl border border-white/10">
+                    <span class="text-lg">⭐</span>
+                    <div class="text-left leading-tight">
+                        <div class="text-[10px] uppercase tracking-wider text-eduLavender font-semibold">Dominadas</div>
+                        <div class="text-sm font-bold text-eduYellow">
+                            <span id="masteredCount">0</span> / <span id="totalWordsCount">78</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL DESPLEGABLE: GUÍA PARA SUBIR IMÁGENES A GITHUB -->
+        <div id="githubGuideBanner" class="hidden bg-eduLavenderLight text-slate-800 border-b-2 border-eduYellow">
+            <div class="max-w-6xl mx-auto px-4 py-4 text-xs sm:text-sm">
+                <div class="flex items-start justify-between gap-4">
+                    <div>
+                        <h3 class="font-bold text-eduNavy text-base mb-1">¿Cómo poner tus láminas en GitHub Pages sin recortar nada?</h3>
+                        <p class="text-slate-600 mb-2">
+                            Este sitio recorta automáticamente cada viñeta usando coordenadas matemáticas. Solo crea una carpeta llamada <code class="bg-white px-1.5 py-0.5 rounded font-bold text-eduNavy border">images/</code> en tu repositorio <code class="bg-white px-1.5 py-0.5 rounded font-mono text-xs">wintoriz.github.io/edukinglish-vocabulary/</code> y sube tus 13 láminas con estos nombres exactos:
+                        </p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1.5 text-xs bg-white p-3 rounded-xl border border-eduLavender">
+                            <div><strong>lamina1.jpg</strong> → Money Mission (Supermarket...)</div>
+                            <div><strong>lamina2.jpg</strong> → Money Mission (Bills & Coins...)</div>
+                            <div><strong>lamina3.jpg</strong> → Money Mission (To save, To spend...)</div>
+                            <div><strong>lamina4.jpg</strong> → Mad Scientists (5 Sentidos)</div>
+                            <div><strong>lamina5.jpg</strong> → Mad Scientists (Laboratory...)</div>
+                            <div><strong>lamina6.jpg</strong> → Mad Scientists (Heart, Lungs...)</div>
+                            <div><strong>lamina7.jpg</strong> → Pathfinders (Digital Detox, FOMO...)</div>
+                            <div><strong>lamina8.jpg</strong> → Art & Storytelling (Work of art...)</div>
+                            <div><strong>lamina9.jpg</strong> → World Explorers (Passport, Flag...)</div>
+                            <div><strong>lamina10.jpg</strong> → World Explorers (Partes de la casa)</div>
+                            <div><strong>lamina11.jpg</strong> → Wellness (Happy, Friendly...)</div>
+                            <div><strong>lamina12.jpg</strong> → Wellness (Floppy disk, GPS...)</div>
+                            <div><strong>lamina13.jpg</strong> → Future Tech (Time machine...)</div>
+                        </div>
+                        <p class="text-emerald-700 font-semibold mt-2">
+                            💡 Tip: Mientras tanto, haz clic en el botón verde <strong>"📂 Cargar mis láminas locales"</strong> arriba y selecciona tus imágenes descargadas para probarlas aquí mismo.
+                        </p>
+                    </div>
+                    <button onclick="toggleGuide()" class="text-slate-400 hover:text-slate-700 font-bold text-lg px-2">✕</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- NAVEGACIÓN POR PESTAÑAS -->
+        <nav class="bg-eduNavyDark border-t border-white/10">
+            <div class="max-w-6xl mx-auto px-4 flex justify-start gap-2 py-2 overflow-x-auto no-scrollbar">
+                <button onclick="switchTab('flashcards')" id="tab-flashcards"
+                    class="tab-btn active flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-xs sm:text-sm transition-all whitespace-nowrap bg-eduYellow text-eduNavy shadow-sm">
+                    <span>🃏</span> Flip Flashcards
+                </button>
+                <button onclick="switchTab('matching')" id="tab-matching"
+                    class="tab-btn flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-xs sm:text-sm transition-all whitespace-nowrap text-eduLavender hover:bg-white/10">
+                    <span>🎮</span> Matching Arcade
+                </button>
+                <button onclick="switchTab('quiz')" id="tab-quiz"
+                    class="tab-btn flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-xs sm:text-sm transition-all whitespace-nowrap text-eduLavender hover:bg-white/10">
+                    <span>🎯</span> Quiz Visual
+                </button>
+                <button onclick="switchTab('album')" id="tab-album"
+                    class="tab-btn flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-xs sm:text-sm transition-all whitespace-nowrap text-eduLavender hover:bg-white/10">
+                    <span>📖</span> Álbum de Láminas
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="flex-grow max-w-6xl w-full mx-auto px-4 py-6">
+
+        <!-- Aviso de estado de imágenes cargadas -->
+        <div id="localLoadedBanner" class="hidden mb-5 bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-2xl flex items-center justify-between text-xs sm:text-sm animate-fade-in">
+            <div class="flex items-center gap-2">
+                <span class="text-lg">✅</span>
+                <span id="localLoadedText"><strong>¡Láminas vinculadas!</strong> Las viñetas de los personajes ahora se muestran recortadas automáticamente.</span>
+            </div>
+            <button onclick="document.getElementById('localLoadedBanner').classList.add('hidden')" class="text-emerald-600 font-bold px-2">✕</button>
+        </div>
+
+        <!-- ========================================================= -->
+        <!-- PESTAÑA 1: FLIP FLASHCARDS 3D                             -->
+        <!-- ========================================================= -->
+        <section id="section-flashcards" class="animate-fade-in">
+            <!-- Barra de búsqueda y filtros -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-eduLavender mb-5">
+                <div class="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between mb-3.5">
+                    <div class="relative flex-grow max-w-md">
+                        <span class="absolute inset-y-0 left-3.5 flex items-center text-slate-400">🔍</span>
+                        <input type="text" id="searchInput" oninput="renderFlashcards()"
+                            placeholder="Buscar palabra en inglés o español..."
+                            class="w-full pl-10 pr-4 py-2 rounded-xl border-2 border-eduLavender focus:border-eduNavy focus:outline-none text-sm transition-colors">
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <button id="toggleMasteredFilter" onclick="toggleOnlyMastered()"
+                            class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold border-2 border-eduLavender text-eduNavy hover:bg-eduLavenderLight transition-colors flex items-center gap-1.5">
+                            <span>⭐</span> Solo dominadas
+                        </button>
+                        <button onclick="resetProgress()" title="Reiniciar progreso"
+                            class="px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-500 hover:text-red-600 hover:bg-red-50 transition-colors">
+                            Reiniciar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filtros por presentación -->
+                <div class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar" id="topicFilters"></div>
+            </div>
+
+            <div class="flex items-center justify-between text-xs sm:text-sm text-slate-500 mb-4 px-1">
+                <span>💡 Haz clic en cualquier tarjeta para voltearla y ver la traducción y ejemplo.</span>
+                <span id="showingCount" class="font-semibold text-eduNavy">Mostrando 78 tarjetas</span>
+            </div>
+
+            <!-- Cuadrícula de Flashcards -->
+            <div id="flashcardsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
+
+            <!-- Estado vacío -->
+            <div id="emptyState" class="hidden text-center py-14 bg-white rounded-2xl border border-eduLavender">
+                <h3 class="text-xl font-bold text-eduNavy">No encontramos esa palabra</h3>
+                <p class="text-slate-500 text-sm mt-1">Prueba con otro término o selecciona "Todas" las presentaciones.</p>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- PESTAÑA 2: MATCHING ARCADE (ASOCIACIÓN VISUAL)            -->
+        <!-- ========================================================= -->
+        <section id="section-matching" class="hidden animate-fade-in">
+            <div class="bg-white rounded-3xl shadow-sm border border-eduLavender p-5 sm:p-8 max-w-4xl mx-auto">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pb-5 border-b border-eduLavender">
+                    <div>
+                        <span class="inline-block px-3 py-1 rounded-full bg-eduLavender text-eduNavy text-xs font-bold mb-1">
+                            Misión Visual
+                        </span>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-eduNavy">Asocia la Escena con su Palabra</h2>
+                        <p class="text-sm text-slate-500">Selecciona una ilustración de los personajes y únelo con su palabra en inglés.</p>
+                    </div>
+
+                    <div class="flex items-center gap-2.5">
+                        <div class="bg-eduLavenderLight px-3.5 py-2 rounded-2xl text-center">
+                            <span class="block text-[10px] font-bold text-eduNavy uppercase">Tiempo</span>
+                            <span id="matchTimer" class="text-base sm:text-lg font-bold text-eduNavy font-mono">00:00</span>
+                        </div>
+                        <div class="bg-eduLavenderLight px-3.5 py-2 rounded-2xl text-center">
+                            <span class="block text-[10px] font-bold text-eduNavy uppercase">Parejas</span>
+                            <span id="matchScore" class="text-base sm:text-lg font-bold text-emerald-600">0 / 6</span>
+                        </div>
+                        <button onclick="initMatchingGame()"
+                            class="bg-eduYellow hover:bg-eduYellowHover text-eduNavy font-bold px-4 py-2.5 rounded-2xl shadow-sm transition-transform active:scale-95 text-xs sm:text-sm">
+                            🔄 Nueva Ronda
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tablero de 2 columnas -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <div>
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 text-center">🎨 Escena del Personaje</h3>
+                        <div id="visualCol" class="grid grid-cols-2 gap-3"></div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 text-center">🇬🇧 Palabra en Inglés</h3>
+                        <div id="wordCol" class="space-y-3"></div>
+                    </div>
+                </div>
+
+                <!-- Victoria -->
+                <div id="matchWinBanner" class="hidden mt-8 bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-6 text-center animate-fade-in">
+                    <div class="text-5xl mb-2">🏆🎉</div>
+                    <h3 class="text-2xl font-bold text-emerald-800">¡Misión Completada!</h3>
+                    <p class="text-emerald-700 mt-1" id="matchWinSummary">¡Excelente trabajo!</p>
+                    <button onclick="initMatchingGame()"
+                        class="mt-4 bg-eduNavy hover:bg-eduNavyDark text-white font-bold px-6 py-2.5 rounded-xl shadow transition-colors">
+                        Jugar otra ronda
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- PESTAÑA 3: QUIZ VISUAL                                    -->
+        <!-- ========================================================= -->
+        <section id="section-quiz" class="hidden animate-fade-in">
+            <div class="bg-white rounded-3xl shadow-sm border border-eduLavender p-5 sm:p-8 max-w-2xl mx-auto">
+                <div id="quizActiveContainer">
+                    <div class="flex items-center justify-between mb-4">
+                        <span id="quizBadge" class="px-3 py-1 rounded-full bg-eduLavender text-eduNavy text-xs font-bold">
+                            The Money Mission
+                        </span>
+                        <span class="text-sm font-bold text-eduNavy">
+                            Pregunta <span id="quizCurrentNum">1</span> de 6
+                        </span>
+                    </div>
+
+                    <div class="w-full bg-eduLavenderLight h-2.5 rounded-full overflow-hidden mb-6">
+                        <div id="quizProgressBar" class="bg-eduYellow h-full transition-all duration-300" style="width: 16.6%"></div>
+                    </div>
+
+                    <!-- Imagen recortada de la viñeta + pregunta -->
+                    <div class="bg-eduLavenderLight/60 rounded-2xl p-4 sm:p-5 mb-6 border border-eduLavender">
+                        <div id="quizVisualBox" class="max-w-xs mx-auto mb-4"></div>
+                        <h3 id="quizQuestionText" class="text-base sm:text-lg font-bold text-eduNavy text-center leading-snug">
+                            ¿Qué palabra representa esta escena?
+                        </h3>
+                    </div>
+
+                    <div id="quizOptions" class="space-y-3"></div>
+                    <div id="quizFeedback" class="hidden mt-5 p-4 rounded-xl text-sm font-medium"></div>
+
+                    <div class="mt-6 flex justify-end">
+                        <button id="quizNextBtn" onclick="nextQuizQuestion()" class="hidden bg-eduNavy hover:bg-eduNavyDark text-white font-bold px-6 py-3 rounded-xl shadow transition-all">
+                            Siguiente pregunta ➡️
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Resultados del Quiz -->
+                <div id="quizResultContainer" class="hidden text-center py-6 animate-fade-in">
+                    <div id="quizFinalEmoji" class="text-6xl mb-3">🌟</div>
+                    <h2 class="text-3xl font-bold text-eduNavy">¡Desafío Terminado!</h2>
+                    <p class="text-slate-600 mt-2 text-base">Tu puntuación en este reto de Edukinglish:</p>
+                    
+                    <div class="my-6 inline-block bg-eduLavenderLight border-2 border-eduLavender px-8 py-4 rounded-2xl">
+                        <span id="quizFinalScore" class="text-4xl font-display font-bold text-eduNavy">6 / 6</span>
+                        <span class="block text-xs font-bold uppercase tracking-wider text-eduNavy mt-1" id="quizRankLabel">Nivel: Pathfinder</span>
+                    </div>
+
+                    <div>
+                        <button onclick="initQuiz()" class="bg-eduYellow hover:bg-eduYellowHover text-eduNavy font-bold px-7 py-3 rounded-xl shadow-md transition-transform active:scale-95">
+                            🔄 Jugar otro Quiz aleatorio
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- PESTAÑA 4: ÁLBUM DE LÁMINAS (LIBRO VISUAL COMPLETO)       -->
+        <!-- ========================================================= -->
+        <section id="section-album" class="hidden animate-fade-in">
+            <div class="mb-5 bg-white p-4 rounded-2xl border border-eduLavender flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div>
+                    <h2 class="text-xl font-bold text-eduNavy">Álbum Visual Completo (13 Láminas)</h2>
+                    <p class="text-xs sm:text-sm text-slate-500">Consulta las láminas originales de 6 viñetas organizadas por presentación.</p>
+                </div>
+            </div>
+            <div id="albumGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t border-eduLavender py-4 mt-8">
+        <div class="max-w-6xl mx-auto px-4 text-center text-xs sm:text-sm text-slate-500">
+            <strong>Edukinglish Academy</strong> • Material interactivo de vocabulario para Explorers, Detectives, Leaders & Pathfinders.
+        </div>
+    </footer>
+
+    <!-- ========================================================= -->
+    <!-- BASE DE DATOS Y LÓGICA INTERACTIVA                        -->
+    <!-- ========================================================= -->
+    <script>
+        // Metadatos de las 13 láminas de 6 viñetas
+        const sheetsInfo = [
+            { file: "lamina1.jpg", title: "The Money Mission — Supermercado y Tienda", topic: "The Money Mission" },
+            { file: "lamina2.jpg", title: "The Money Mission — Dinero y Envases", topic: "The Money Mission" },
+            { file: "lamina3.jpg", title: "The Money Mission — Verbos Financieros", topic: "The Money Mission" },
+            { file: "lamina4.jpg", title: "Mad Scientists — Los 5 Sentidos", topic: "Mad Scientists" },
+            { file: "lamina5.jpg", title: "Mad Scientists — Laboratorio", topic: "Mad Scientists" },
+            { file: "lamina6.jpg", title: "Mad Scientists — Cuerpo Humano y Órganos", topic: "Mad Scientists" },
+            { file: "lamina7.jpg", title: "Pathfinders — Vida Digital", topic: "Mad Scientists" },
+            { file: "lamina8.jpg", title: "Art & Storytelling — Arte y Escuela", topic: "Art & Storytelling" },
+            { file: "lamina9.jpg", title: "World Explorers — Viajes y Geografía", topic: "World Explorers" },
+            { file: "lamina10.jpg", title: "World Explorers — Partes de la Casa", topic: "World Explorers" },
+            { file: "lamina11.jpg", title: "Wellness — Emociones y Cualidades", topic: "Wellness" },
+            { file: "lamina12.jpg", title: "Wellness — Tecnología Antigua vs. Moderna", topic: "Wellness" },
+            { file: "lamina13.jpg", title: "Future Tech — El Futuro", topic: "Future Tech" }
+        ];
+
+        // Las 78 palabras exactas mapeadas a su lámina (sheet), fila (row: 0-1) y columna (col: 0-2)
+        const vocabularyData = [
+            // LÁMINA 1: The Money Mission (Supermercado)
+            { id: 1, sheet: "lamina1.jpg", row: 0, col: 0, topic: "The Money Mission", level: "Explorers", en: "Supermarket", es: "Supermercado", example: "Dogito pushes a shopping cart inside the supermarket." },
+            { id: 2, sheet: "lamina1.jpg", row: 0, col: 1, topic: "The Money Mission", level: "Explorers", en: "Groceries", es: "Comestibles", example: "Mooney carries a red basket full of fresh groceries." },
+            { id: 3, sheet: "lamina1.jpg", row: 0, col: 2, topic: "The Money Mission", level: "Explorers", en: "Cashier", es: "Cajero / Cajera", example: "Mrs. Neigh works as a friendly cashier at the store." },
+            { id: 4, sheet: "lamina1.jpg", row: 1, col: 0, topic: "The Money Mission", level: "Explorers", en: "Customer", es: "Cliente", example: "Kingly is a customer paying with bills and coins." },
+            { id: 5, sheet: "lamina1.jpg", row: 1, col: 1, topic: "The Money Mission", level: "Explorers", en: "Receipt", es: "Recibo / Ticket", example: "Dogito checks his receipt after buying food." },
+            { id: 6, sheet: "lamina1.jpg", row: 1, col: 2, topic: "The Money Mission", level: "Explorers", en: "Piggy bank", es: "Alcancía", example: "Mooney puts a gold coin inside her pink piggy bank." },
+
+            // LÁMINA 2: The Money Mission (Dinero y Envases)
+            { id: 7, sheet: "lamina2.jpg", row: 0, col: 0, topic: "The Money Mission", level: "Explorers", en: "Bills & Coins", es: "Billetes y monedas", example: "Dogito holds green bills in one hand and gold coins in the other." },
+            { id: 8, sheet: "lamina2.jpg", row: 0, col: 1, topic: "The Money Mission", level: "Explorers", en: "Credit card", es: "Tarjeta de crédito", example: "Kingly uses a credit card at the payment terminal." },
+            { id: 9, sheet: "lamina2.jpg", row: 0, col: 2, topic: "The Money Mission", level: "Detectives", en: "Cheaper / More expensive", es: "Más barato / Más caro", example: "The blue t-shirt is cheaper than the purple sweater." },
+            { id: 10, sheet: "lamina2.jpg", row: 1, col: 0, topic: "The Money Mission", level: "Detectives", en: "More expensive", es: "Más caro", example: "Mooney compares the price of a water bottle and a sweater." },
+            { id: 11, sheet: "lamina2.jpg", row: 1, col: 1, topic: "The Money Mission", level: "Explorers", en: "Bottle", es: "Botella", example: "Dogito holds a reusable blue water bottle." },
+            { id: 12, sheet: "lamina2.jpg", row: 1, col: 2, topic: "The Money Mission", level: "Explorers", en: "Box", es: "Caja", example: "Kingly and Mooney have snacks in a box during their picnic." },
+
+            // LÁMINA 3: The Money Mission (Verbos Financieros)
+            { id: 13, sheet: "lamina3.jpg", row: 0, col: 0, topic: "The Money Mission", level: "Pathfinders", en: "To save", es: "Ahorrar", example: "Mooney saves money regularly in her piggy bank." },
+            { id: 14, sheet: "lamina3.jpg", row: 0, col: 1, topic: "The Money Mission", level: "Pathfinders", en: "To spend", es: "Gastar", example: "Dogito goes to the store to spend money on a teddy bear." },
+            { id: 15, sheet: "lamina3.jpg", row: 0, col: 2, topic: "The Money Mission", level: "Pathfinders", en: "To budget", es: "Presupuestar", example: "Kingly writes down his plan on a budget sheet." },
+            { id: 16, sheet: "lamina3.jpg", row: 1, col: 0, topic: "The Money Mission", level: "Pathfinders", en: "To invest", es: "Invertir", example: "Mrs. Neigh waters a money plant to watch her savings grow." },
+            { id: 17, sheet: "lamina3.jpg", row: 1, col: 1, topic: "The Money Mission", level: "Pathfinders", en: "To earn", es: "Ganar dinero", example: "Dogito works hard at the shop to earn his own money." },
+            { id: 18, sheet: "lamina3.jpg", row: 1, col: 2, topic: "The Money Mission", level: "Pathfinders", en: "To waste", es: "Desperdiciar / gastar mal", example: "Kingly feels sad when he wastes money on things he doesn't need." },
+
+            // LÁMINA 4: Mad Scientists (Los 5 Sentidos)
+            { id: 19, sheet: "lamina4.jpg", row: 0, col: 0, topic: "Mad Scientists", level: "Explorers", en: "Sight", es: "Vista", example: "Dogito uses a magnifying glass to observe shapes with his sight." },
+            { id: 20, sheet: "lamina4.jpg", row: 0, col: 1, topic: "Mad Scientists", level: "Explorers", en: "Touch", es: "Tacto", example: "Mooney feels soft foam and a pillow using her sense of touch." },
+            { id: 21, sheet: "lamina4.jpg", row: 0, col: 2, topic: "Mad Scientists", level: "Explorers", en: "Smell", es: "Olfato", example: "Kingly uses his sense of smell near a flower and a flask." },
+            { id: 22, sheet: "lamina4.jpg", row: 1, col: 0, topic: "Mad Scientists", level: "Explorers", en: "Taste", es: "Gusto", example: "Mrs. Neigh enjoys the sweet taste of fresh strawberries." },
+            { id: 23, sheet: "lamina4.jpg", row: 1, col: 1, topic: "Mad Scientists", level: "Explorers", en: "Hearing", es: "Oído", example: "Dogito listens carefully to the ringing bell with his hearing." },
+            { id: 24, sheet: "lamina4.jpg", row: 1, col: 2, topic: "Mad Scientists", level: "Detectives", en: "Hypothesis", es: "Hipótesis", example: "Mooney thinks of a hypothesis about which objects float or sink." },
+
+            // LÁMINA 5: Mad Scientists (Laboratorio)
+            { id: 25, sheet: "lamina5.jpg", row: 0, col: 0, topic: "Mad Scientists", level: "Detectives", en: "Laboratory", es: "Laboratorio", example: "Dr. Mooney wears a white coat inside her science laboratory." },
+            { id: 26, sheet: "lamina5.jpg", row: 0, col: 1, topic: "Mad Scientists", level: "Detectives", en: "Robot arm", es: "Brazo robótico", example: "Dogito controls a mechanical robot arm holding a blue flask." },
+            { id: 27, sheet: "lamina5.jpg", row: 0, col: 2, topic: "Mad Scientists", level: "Detectives", en: "Test tubes", es: "Tubos de ensayo", example: "Kingly observes colorful liquids bubbling in test tubes." },
+            { id: 28, sheet: "lamina5.jpg", row: 1, col: 0, topic: "Mad Scientists", level: "Detectives", en: "Potion", es: "Poción", example: "Mooney holds a round flask with a glowing purple potion." },
+            { id: 29, sheet: "lamina5.jpg", row: 1, col: 1, topic: "Mad Scientists", level: "Detectives", en: "Goggles", es: "Gafas protectoras", example: "Mrs. Neigh wears protective goggles for safety in the lab." },
+            { id: 30, sheet: "lamina5.jpg", row: 1, col: 2, topic: "Mad Scientists", level: "Detectives", en: "Magnifying glass", es: "Lupa", example: "Dogito inspects a tiny crystal with a magnifying glass." },
+
+            // LÁMINA 6: Mad Scientists (Cuerpo Humano y Órganos)
+            { id: 31, sheet: "lamina6.jpg", row: 0, col: 0, topic: "Mad Scientists", level: "Detectives", en: "Heart", es: "Corazón", example: "Dogito listens to the heartbeat using a stethoscope." },
+            { id: 32, sheet: "lamina6.jpg", row: 0, col: 1, topic: "Mad Scientists", level: "Detectives", en: "Lungs", es: "Pulmones", example: "Mooney breathes deeply to fill her lungs with oxygen." },
+            { id: 33, sheet: "lamina6.jpg", row: 0, col: 2, topic: "Mad Scientists", level: "Detectives", en: "Brain", es: "Cerebro", example: "Kingly points to his head where the brain controls everything." },
+            { id: 34, sheet: "lamina6.jpg", row: 1, col: 0, topic: "Mad Scientists", level: "Detectives", en: "Skeleton", es: "Esqueleto", example: "Mrs. Neigh shows an X-ray screen of a human skeleton." },
+            { id: 35, sheet: "lamina6.jpg", row: 1, col: 1, topic: "Mad Scientists", level: "Detectives", en: "Muscles", es: "Músculos", example: "Dogito flexes his arm to show how strong his muscles are." },
+            { id: 36, sheet: "lamina6.jpg", row: 1, col: 2, topic: "Mad Scientists", level: "Explorers", en: "Paws / Tail", es: "Patas / Cola", example: "Mooney and Kingly both have furry paws and a tail." },
+
+            // LÁMINA 7: Pathfinders (Vida Digital)
+            { id: 37, sheet: "lamina7.jpg", row: 0, col: 0, topic: "Mad Scientists", level: "Pathfinders", en: "Scroll mindlessly", es: "Desplazarse sin pensar", example: "Mooney walks while scrolling mindlessly on her phone." },
+            { id: 38, sheet: "lamina7.jpg", row: 0, col: 1, topic: "Mad Scientists", level: "Pathfinders", en: "Attention span", es: "Capacidad de atención", example: "Too many notifications can reduce our attention span." },
+            { id: 39, sheet: "lamina7.jpg", row: 0, col: 2, topic: "Mad Scientists", level: "Pathfinders", en: "FOMO", es: "Miedo a perderse algo", example: "Dogito feels FOMO when he sees social media notifications." },
+            { id: 40, sheet: "lamina7.jpg", row: 1, col: 0, topic: "Mad Scientists", level: "Pathfinders", en: "Burnout syndrome", es: "Síndrome de agotamiento", example: "Working nonstop at the computer can cause burnout syndrome." },
+            { id: 41, sheet: "lamina7.jpg", row: 1, col: 1, topic: "Mad Scientists", level: "Pathfinders", en: "Digital detox", es: "Desintoxicación digital", example: "Mooney turns off all screens for a relaxing digital detox in nature." },
+            { id: 42, sheet: "lamina7.jpg", row: 1, col: 2, topic: "Mad Scientists", level: "Pathfinders", en: "Remote position", es: "Puesto remoto", example: "Kingly works from his home office in a remote position." },
+
+            // LÁMINA 8: Art & Storytelling
+            { id: 43, sheet: "lamina8.jpg", row: 0, col: 0, topic: "Art & Storytelling", level: "Explorers", en: "Work of art", es: "Obra de arte", example: "Mrs. Neigh admires a framed painting, a true work of art." },
+            { id: 44, sheet: "lamina8.jpg", row: 0, col: 1, topic: "Art & Storytelling", level: "Detectives", en: "Exhibition", es: "Exhibición / Exposición", example: "Mooney and Kingly visit the school art exhibition." },
+            { id: 45, sheet: "lamina8.jpg", row: 0, col: 2, topic: "Art & Storytelling", level: "Explorers", en: "Storyteller", es: "Narrador / Cuentacuentos", example: "Mrs. Neigh is a wonderful storyteller reading to the class." },
+            { id: 46, sheet: "lamina8.jpg", row: 1, col: 0, topic: "Art & Storytelling", level: "Explorers", en: "Backpack", es: "Mochila", example: "Dogito walks to school wearing his colorful backpack." },
+            { id: 47, sheet: "lamina8.jpg", row: 1, col: 1, topic: "Art & Storytelling", level: "Detectives", en: "Sketchbook", es: "Cuaderno de dibujo", example: "Kingly draws a flower with colored pencils in his sketchbook." },
+            { id: 48, sheet: "lamina8.jpg", row: 1, col: 2, topic: "Art & Storytelling", level: "Explorers", en: "Whiteboard", es: "Pizarra blanca", example: "Mooney draws a story map with a marker on the whiteboard." },
+
+            // LÁMINA 9: World Explorers (Viajes y Geografía)
+            { id: 49, sheet: "lamina9.jpg", row: 0, col: 0, topic: "World Explorers", level: "Explorers", en: "Passport", es: "Pasaporte", example: "Mrs. Neigh presents her passport at the airport check-in." },
+            { id: 50, sheet: "lamina9.jpg", row: 0, col: 1, topic: "World Explorers", level: "Explorers", en: "Flag", es: "Bandera", example: "Dogito plants the Edukinglish flag on top of a mountain." },
+            { id: 51, sheet: "lamina9.jpg", row: 0, col: 2, topic: "World Explorers", level: "Detectives", en: "Continent", es: "Continente", example: "Kingly points to Europe and Africa on a world map." },
+            { id: 52, sheet: "lamina9.jpg", row: 1, col: 0, topic: "World Explorers", level: "Explorers", en: "Weather", es: "Clima", example: "Mooney is ready for sunny or rainy weather with an umbrella and fan." },
+            { id: 53, sheet: "lamina9.jpg", row: 1, col: 1, topic: "World Explorers", level: "Detectives", en: "Culture", es: "Cultura", example: "Mrs. Neigh and Kingly dance in traditional clothes to celebrate culture." },
+            { id: 54, sheet: "lamina9.jpg", row: 1, col: 2, topic: "World Explorers", level: "Explorers", en: "Tower", es: "Torre", example: "Kingly visits a tall landmark tower decorated with flags." },
+
+            // LÁMINA 10: World Explorers (Partes de la Casa)
+            { id: 55, sheet: "lamina10.jpg", row: 0, col: 0, topic: "World Explorers", level: "Explorers", en: "Bedroom", es: "Habitación / Dormitorio", example: "Mooney stretches happily in bed inside her sunny bedroom." },
+            { id: 56, sheet: "lamina10.jpg", row: 0, col: 1, topic: "World Explorers", level: "Explorers", en: "Living room", es: "Sala de estar", example: "Dogito reads a book on the sofa in the cozy living room." },
+            { id: 57, sheet: "lamina10.jpg", row: 0, col: 2, topic: "World Explorers", level: "Explorers", en: "Dining room", es: "Comedor", example: "Mrs. Neigh and Kingly share a meal together in the dining room." },
+            { id: 58, sheet: "lamina10.jpg", row: 1, col: 0, topic: "World Explorers", level: "Explorers", en: "Bathroom", es: "Baño", example: "Mooney brushes her teeth in front of the bathroom mirror." },
+            { id: 59, sheet: "lamina10.jpg", row: 1, col: 1, topic: "World Explorers", level: "Explorers", en: "Kitchen", es: "Cocina", example: "Kingly mixes cookie dough in a bowl inside the kitchen." },
+            { id: 60, sheet: "lamina10.jpg", row: 1, col: 2, topic: "World Explorers", level: "Explorers", en: "Garage", es: "Garaje", example: "Mrs. Neigh washes her bicycle next to the car in the garage." },
+
+            // LÁMINA 11: Wellness (Emociones y Cualidades)
+            { id: 61, sheet: "lamina11.jpg", row: 0, col: 0, topic: "Wellness", level: "Explorers", en: "Happy", es: "Feliz", example: "Mooney jumps with joy because she feels super happy!" },
+            { id: 62, sheet: "lamina11.jpg", row: 0, col: 1, topic: "Wellness", level: "Explorers", en: "Friendly", es: "Amigable", example: "Dogito and Kingly are friendly and wave hello to everyone." },
+            { id: 63, sheet: "lamina11.jpg", row: 0, col: 2, topic: "Wellness", level: "Explorers", en: "Creative", es: "Creativo", example: "Kingly has a bright idea while painting a starry night." },
+            { id: 64, sheet: "lamina11.jpg", row: 1, col: 0, topic: "Wellness", level: "Explorers", en: "Curious", es: "Curioso", example: "Mooney is curious and examines a tiny ladybug on a leaf." },
+            { id: 65, sheet: "lamina11.jpg", row: 1, col: 1, topic: "Wellness", level: "Explorers", en: "Patient", es: "Paciente", example: "Mrs. Neigh sits quietly on a bench, patient enough for a bird to land." },
+            { id: 66, sheet: "lamina11.jpg", row: 1, col: 2, topic: "Wellness", level: "Explorers", en: "Proud", es: "Orgulloso", example: "Dogito feels proud wearing his gold achievement medal." },
+
+            // LÁMINA 12: Wellness (Tecnología Antigua vs. Moderna)
+            { id: 67, sheet: "lamina12.jpg", row: 0, col: 0, topic: "Wellness", level: "Pathfinders", en: "Floppy disk", es: "Disquete", example: "Mooney wonders how an old floppy disk stored computer files." },
+            { id: 68, sheet: "lamina12.jpg", row: 0, col: 1, topic: "Wellness", level: "Pathfinders", en: "Smartphone", es: "Teléfono inteligente", example: "Kingly interacts with apps on a modern smartphone." },
+            { id: 69, sheet: "lamina12.jpg", row: 0, col: 2, topic: "Wellness", level: "Pathfinders", en: "Macintosh", es: "Macintosh", example: "Mrs. Neigh types on a classic vintage Macintosh computer." },
+            { id: 70, sheet: "lamina12.jpg", row: 1, col: 0, topic: "Wellness", level: "Pathfinders", en: "iMac", es: "iMac", example: "Mooney uses a colorful desktop iMac computer." },
+            { id: 71, sheet: "lamina12.jpg", row: 1, col: 1, topic: "Wellness", level: "Pathfinders", en: "GPS", es: "GPS", example: "Dogito follows the GPS navigation map while driving his car." },
+            { id: 72, sheet: "lamina12.jpg", row: 1, col: 2, topic: "Wellness", level: "Pathfinders", en: "Wireless", es: "Inalámbrico", example: "Kingly walks in the park using a tablet with wireless Wi-Fi." },
+
+            // LÁMINA 13: Future Tech (El Futuro)
+            { id: 73, sheet: "lamina13.jpg", row: 0, col: 0, topic: "Future Tech", level: "Explorers", en: "The World of Tomorrow", es: "El mundo del mañana", example: "All four friends look out at a futuristic city with flying cars." },
+            { id: 74, sheet: "lamina13.jpg", row: 0, col: 1, topic: "Future Tech", level: "Explorers", en: "Future", es: "Futuro", example: "Dogito and Kingly explore a hologram timeline of the future." },
+            { id: 75, sheet: "lamina13.jpg", row: 0, col: 2, topic: "Future Tech", level: "Explorers", en: "Helmet", es: "Casco", example: "Mrs. Neigh gives a thumbs-up wearing a high-tech visor helmet." },
+            { id: 76, sheet: "lamina13.jpg", row: 1, col: 0, topic: "Future Tech", level: "Detectives", en: "Superstitions", es: "Supersticiones", example: "Mooney looks at a broken mirror and a ladder, classic superstitions." },
+            { id: 77, sheet: "lamina13.jpg", row: 1, col: 1, topic: "Future Tech", level: "Detectives", en: "Space station", es: "Estación espacial", example: "Kingly floats inside an orbiting space station looking at Earth." },
+            { id: 78, sheet: "lamina13.jpg", row: 1, col: 2, topic: "Future Tech", level: "Detectives", en: "Time machine", es: "Máquina del tiempo", example: "Dogito and Mooney travel between the past and future in a time machine." }
+        ];
+
+        // Mapa de URLs dinámicas: por defecto apuntan a 'images/laminaX.jpg' para GitHub Pages,
+        // pero si el usuario carga archivos locales con el botón verde, se reemplazan al instante por ObjectURLs.
+        const sheetUrlMap = {};
+        sheetsInfo.forEach(s => {
+            sheetUrlMap[s.file] = `images/${s.file}`;
+        });
+
+        // Estado global
+        let masteredIds = new Set(JSON.parse(localStorage.getItem('edukinglish_mastered_v2') || '[]'));
+        let selectedTopic = "Todas";
+        let onlyMastered = false;
+
+        // =========================================================
+        // GENERADOR DE VENTANA DE VIÑETA RECORTADA (SPRITE HELPER)
+        // =========================================================
+        function renderSpriteHTML(item, extraClass = "") {
+            const imgUrl = sheetUrlMap[item.sheet];
+            return `
+                <div class="sprite-window ${extraClass}">
+                    <!-- Fallback elegante si la lámina aún no está en la carpeta images/ -->
+                    <div class="absolute inset-0 flex flex-col items-center justify-center p-3 text-center text-eduNavy/70">
+                        <span class="text-xs font-bold uppercase tracking-wider bg-white/80 px-2.5 py-1 rounded-lg mb-1">
+                            ${item.sheet} • F${item.row + 1}:C${item.col + 1}
+                        </span>
+                        <span class="text-[11px] leading-tight">
+                            Sube <strong>images/${item.sheet}</strong> o usa <em>"Cargar mis láminas locales"</em>
+                        </span>
+                    </div>
+                    <!-- Imagen recortada automáticamente a la viñeta exacta -->
+                    <img src="${imgUrl}" 
+                         alt="${item.en}" 
+                         class="sprite-crop sprite-row-${item.row} sprite-col-${item.col}"
+                         onerror="this.style.display='none'">
+                </div>
+            `;
+        }
+
+        // =========================================================
+        // CARGA INSTANTÁNEA DE ARCHIVOS LOCALES (PARA VISTA PREVIA)
+        // =========================================================
+        function handleLocalImages(event) {
+            const files = Array.from(event.target.files);
+            if (!files.length) return;
+
+            let matchedFiles = 0;
+
+            // Ordenar archivos por número si tienen nombres como lamina1, lamina2, etc.
+            files.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+
+            files.forEach((file, index) => {
+                const lowerName = file.name.toLowerCase();
+                const blobUrl = URL.createObjectURL(file);
+
+                // Buscar coincidencia exacta por nombre (lamina1, lamina2... lamina13)
+                const numMatch = lowerName.match(/lamina\s*(\d+)/i);
+                if (numMatch) {
+                    const sheetKey = `lamina${numMatch[1]}.jpg`;
+                    if (sheetUrlMap.hasOwnProperty(sheetKey)) {
+                        sheetUrlMap[sheetKey] = blobUrl;
+                        matchedFiles++;
+                    }
+                } else if (index < sheetsInfo.length) {
+                    // Si tienen otro nombre (ej. watermarked_img_...), asignarlos en orden
+                    sheetUrlMap[sheetsInfo[index].file] = blobUrl;
+                    matchedFiles++;
+                }
+            });
+
+            // Re-renderizar todas las vistas con las nuevas imágenes reales
+            renderFlashcards();
+            initMatchingGame();
+            renderQuizQuestion();
+            renderAlbum();
+
+            const banner = document.getElementById('localLoadedBanner');
+            const text = document.getElementById('localLoadedText');
+            text.innerHTML = `<strong>¡${matchedFiles} láminas cargadas!</strong> Todas las tarjetas ahora muestran las ilustraciones reales de los personajes de Edukinglish.`;
+            banner.classList.remove('hidden');
+        }
+
+        function toggleGuide() {
+            document.getElementById('githubGuideBanner').classList.toggle('hidden');
+        }
+
+        // =========================================================
+        // INICIALIZACIÓN Y NAVEGACIÓN DE PESTAÑAS
+        // =========================================================
+        window.onload = function () {
+            document.getElementById('totalWordsCount').textContent = vocabularyData.length;
+            updateMasteredCounter();
+            renderTopicFilters();
+            renderFlashcards();
+            initMatchingGame();
+            initQuiz();
+            renderAlbum();
+        };
+
+        function switchTab(tabName) {
+            ['flashcards', 'matching', 'quiz', 'album'].forEach(id => {
+                document.getElementById(`section-${id}`).classList.add('hidden');
+                const btn = document.getElementById(`tab-${id}`);
+                btn.classList.remove('bg-eduYellow', 'text-eduNavy', 'shadow-sm');
+                btn.classList.add('text-eduLavender', 'hover:bg-white/10');
+            });
+
+            document.getElementById(`section-${tabName}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-${tabName}`);
+            activeBtn.classList.remove('text-eduLavender', 'hover:bg-white/10');
+            activeBtn.classList.add('bg-eduYellow', 'text-eduNavy', 'shadow-sm');
+        }
+
+        // =========================================================
+        // PESTAÑA 1: FLIP FLASHCARDS 3D
+        // =========================================================
+        function renderTopicFilters() {
+            const topics = ["Todas", ...new Set(vocabularyData.map(item => item.topic))];
+            const container = document.getElementById('topicFilters');
+            container.innerHTML = topics.map(topic => {
+                const isActive = topic === selectedTopic;
+                return `
+                    <button onclick="selectTopic('${topic}')"
+                        class="px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all whitespace-nowrap ${
+                            isActive 
+                            ? 'bg-eduNavy text-white shadow-sm' 
+                            : 'bg-eduLavenderLight text-eduNavy hover:bg-eduLavender'
+                        }">
+                        ${topic}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function selectTopic(topic) {
+            selectedTopic = topic;
+            renderTopicFilters();
+            renderFlashcards();
+        }
+
+        function toggleOnlyMastered() {
+            onlyMastered = !onlyMastered;
+            const btn = document.getElementById('toggleMasteredFilter');
+            if (onlyMastered) {
+                btn.classList.add('bg-eduYellow', 'border-eduYellow', 'text-eduNavy');
+            } else {
+                btn.classList.remove('bg-eduYellow', 'border-eduYellow');
+            }
+            renderFlashcards();
+        }
+
+        function renderFlashcards() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            const grid = document.getElementById('flashcardsGrid');
+            const emptyState = document.getElementById('emptyState');
+
+            const filtered = vocabularyData.filter(item => {
+                const matchesTopic = selectedTopic === "Todas" || item.topic === selectedTopic;
+                const matchesMastered = !onlyMastered || masteredIds.has(item.id);
+                const matchesSearch = !query || 
+                    item.en.toLowerCase().includes(query) || 
+                    item.es.toLowerCase().includes(query) ||
+                    item.topic.toLowerCase().includes(query);
+                return matchesTopic && matchesMastered && matchesSearch;
+            });
+
+            document.getElementById('showingCount').textContent = `Mostrando ${filtered.length} ${filtered.length === 1 ? 'tarjeta' : 'tarjetas'}`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            grid.innerHTML = filtered.map(item => {
+                const isMastered = masteredIds.has(item.id);
+                return `
+                    <div class="flip-card perspective-1000 h-80 cursor-pointer select-none group" 
+                         tabindex="0"
+                         onclick="this.classList.toggle('flipped')"
+                         onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.classList.toggle('flipped');}">
+                        <div class="flip-card-inner shadow-sm group-hover:shadow-md transition-shadow">
+                            
+                            <!-- FRENTE: VIÑETA DEL PERSONAJE + PALABRA EN INGLÉS -->
+                            <div class="flip-card-front bg-white border-2 ${isMastered ? 'border-eduYellow' : 'border-eduLavender'} p-3.5 flex flex-col justify-between">
+                                <div class="flex items-center justify-between gap-2 mb-2">
+                                    <span class="px-2 py-0.5 rounded-md bg-eduLavender text-eduNavy text-[10px] font-bold truncate">
+                                        ${item.topic}
+                                    </span>
+                                    <span class="text-[10px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
+                                        ${item.level}
+                                    </span>
+                                </div>
+
+                                <!-- Ilustración recortada de la lámina -->
+                                ${renderSpriteHTML(item, "shadow-inner")}
+
+                                <div class="text-center mt-2.5">
+                                    <h3 class="text-lg sm:text-xl font-bold text-eduNavy tracking-tight leading-tight">
+                                        ${item.en}
+                                    </h3>
+                                </div>
+
+                                <div class="flex items-center justify-between pt-2 mt-1 border-t border-slate-100">
+                                    <button type="button" onclick="speakWord(event, '${item.en.replace(/'/g, "\\'")}')"
+                                        class="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-eduLavenderLight hover:bg-eduLavender text-eduNavy text-xs font-bold transition-colors">
+                                        <span>🔊</span> Escuchar
+                                    </button>
+                                    <span class="text-[11px] text-slate-400 font-medium">🔄 Voltear</span>
+                                </div>
+                            </div>
+
+                            <!-- REVERSO: TRADUCCIÓN + EJEMPLO EN CONTEXTO -->
+                            <div class="flip-card-back bg-eduNavy text-white p-5 flex flex-col justify-between border-2 border-eduNavyDark">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-bold uppercase tracking-wider text-eduYellow">Traducción</span>
+                                    <span class="text-xs font-semibold text-eduLavender">${item.en}</span>
+                                </div>
+
+                                <div class="text-center my-auto">
+                                    <p class="text-2xl font-display font-bold text-white mb-3">
+                                        ${item.es}
+                                    </p>
+                                    <div class="bg-white/10 rounded-xl p-3 text-left border border-white/10">
+                                        <span class="block text-[10px] uppercase tracking-wider text-eduLavender font-bold mb-1">Ejemplo en clase:</span>
+                                        <p class="text-xs sm:text-sm text-white/95 italic leading-relaxed">
+                                            "${item.example}"
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center justify-between pt-2">
+                                    <button type="button" onclick="speakWord(event, '${item.example.replace(/'/g, "\\'")}')"
+                                        class="px-2.5 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 text-white text-xs font-semibold transition-colors">
+                                        🔊 Oír oración
+                                    </button>
+
+                                    <button type="button" onclick="toggleMastered(event, ${item.id})"
+                                        class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1 ${
+                                            isMastered 
+                                            ? 'bg-eduYellow text-eduNavy shadow' 
+                                            : 'bg-white/15 hover:bg-white/25 text-white'
+                                        }">
+                                        <span>${isMastered ? '⭐' : '☆'}</span>
+                                        ${isMastered ? 'Dominada' : 'Marcar'}
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function speakWord(event, text) {
+            event.stopPropagation();
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.92;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function toggleMastered(event, id) {
+            event.stopPropagation();
+            if (masteredIds.has(id)) {
+                masteredIds.delete(id);
+            } else {
+                masteredIds.add(id);
+            }
+            localStorage.setItem('edukinglish_mastered_v2', JSON.stringify([...masteredIds]));
+            updateMasteredCounter();
+            renderFlashcards();
+        }
+
+        function updateMasteredCounter() {
+            document.getElementById('masteredCount').textContent = masteredIds.size;
+        }
+
+        function resetProgress() {
+            masteredIds.clear();
+            localStorage.removeItem('edukinglish_mastered_v2');
+            updateMasteredCounter();
+            renderFlashcards();
+        }
+
+        // =========================================================
+        // PESTAÑA 2: MATCHING ARCADE (ASOCIACIÓN VISUAL)
+        // =========================================================
+        let matchPairs = [];
+        let selectedVisualId = null;
+        let selectedWordId = null;
+        let matchedCount = 0;
+        let timerInterval = null;
+        let secondsElapsed = 0;
+
+        function initMatchingGame() {
+            clearInterval(timerInterval);
+            secondsElapsed = 0;
+            matchedCount = 0;
+            selectedVisualId = null;
+            selectedWordId = null;
+
+            document.getElementById('matchTimer').textContent = "00:00";
+            document.getElementById('matchScore').textContent = "0 / 6";
+            document.getElementById('matchWinBanner').classList.add('hidden');
+
+            const shuffledAll = [...vocabularyData].sort(() => Math.random() - 0.5);
+            matchPairs = shuffledAll.slice(0, 6);
+
+            const visualList = [...matchPairs].sort(() => Math.random() - 0.5);
+            const wordList = [...matchPairs].sort(() => Math.random() - 0.5);
+
+            const visualCol = document.getElementById('visualCol');
+            const wordCol = document.getElementById('wordCol');
+
+            visualCol.innerHTML = visualList.map(item => `
+                <button id="match-vis-${item.id}" onclick="handleMatchSelect('vis', ${item.id})"
+                    class="match-btn-vis p-2 rounded-2xl border-2 border-eduLavender bg-white hover:border-eduNavy transition-all overflow-hidden">
+                    ${renderSpriteHTML(item)}
+                </button>
+            `).join('');
+
+            wordCol.innerHTML = wordList.map(item => `
+                <button id="match-wrd-${item.id}" onclick="handleMatchSelect('wrd', ${item.id})"
+                    class="match-btn-wrd w-full p-4 rounded-2xl border-2 border-eduLavender bg-white hover:bg-eduLavenderLight text-eduNavy font-bold text-left flex items-center justify-between transition-all">
+                    <div>
+                        <span class="block text-base">${item.en}</span>
+                        <span class="block text-xs text-slate-400 font-normal">${item.es}</span>
+                    </div>
+                    <span class="text-xs px-2 py-1 rounded-md bg-eduLavenderLight text-eduNavy">${item.topic}</span>
+                </button>
+            `).join('');
+
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+                const secs = String(secondsElapsed % 60).padStart(2, '0');
+                document.getElementById('matchTimer').textContent = `${mins}:${secs}`;
+            }, 1000);
+        }
+
+        function handleMatchSelect(type, id) {
+            const btn = document.getElementById(`match-${type}-${id}`);
+            if (!btn || btn.disabled) return;
+
+            if (type === 'vis') {
+                document.querySelectorAll('.match-btn-vis:not(:disabled)').forEach(b => {
+                    b.classList.remove('border-eduNavy', 'ring-4', 'ring-eduYellow');
+                });
+                selectedVisualId = id;
+                btn.classList.add('border-eduNavy', 'ring-4', 'ring-eduYellow');
+            } else {
+                document.querySelectorAll('.match-btn-wrd:not(:disabled)').forEach(b => {
+                    b.classList.remove('border-eduNavy', 'bg-eduLavender', 'ring-2', 'ring-eduNavy/30');
+                });
+                selectedWordId = id;
+                btn.classList.add('border-eduNavy', 'bg-eduLavender', 'ring-2', 'ring-eduNavy/30');
+            }
+
+            if (selectedVisualId !== null && selectedWordId !== null) {
+                const visBtn = document.getElementById(`match-vis-${selectedVisualId}`);
+                const wrdBtn = document.getElementById(`match-wrd-${selectedWordId}`);
+
+                if (selectedVisualId === selectedWordId) {
+                    [visBtn, wrdBtn].forEach(el => {
+                        el.disabled = true;
+                        el.classList.remove('border-eduNavy', 'bg-eduLavender', 'ring-4', 'ring-eduYellow', 'ring-2');
+                        el.classList.add('border-emerald-500', 'bg-emerald-50', 'opacity-75');
+                    });
+                    matchedCount++;
+                    document.getElementById('matchScore').textContent = `${matchedCount} / 6`;
+
+                    if (matchedCount === 6) {
+                        clearInterval(timerInterval);
+                        const finalTime = document.getElementById('matchTimer').textContent;
+                        document.getElementById('matchWinSummary').textContent = `Completaste las 6 parejas en un tiempo de ${finalTime}.`;
+                        document.getElementById('matchWinBanner').classList.remove('hidden');
+                    }
+                } else {
+                    [visBtn, wrdBtn].forEach(el => {
+                        el.classList.add('border-red-500', 'bg-red-50', 'animate-shake');
+                        setTimeout(() => {
+                            el.classList.remove('border-red-500', 'bg-red-50', 'animate-shake', 'border-eduNavy', 'bg-eduLavender', 'ring-4', 'ring-eduYellow', 'ring-2', 'ring-eduNavy/30');
+                        }, 450);
+                    });
+                }
+
+                selectedVisualId = null;
+                selectedWordId = null;
+            }
+        }
+
+        // =========================================================
+        // PESTAÑA 3: QUIZ VISUAL DINÁMICO (USA LAS 78 PALABRAS)
+        // =========================================================
+        let currentQuizSet = [];
+        let currentQuizIdx = 0;
+        let quizScore = 0;
+        let quizAnswered = false;
+
+        function initQuiz() {
+            currentQuizIdx = 0;
+            quizScore = 0;
+            // Generar 6 preguntas aleatorias a partir del vocabulario
+            const shuffled = [...vocabularyData].sort(() => Math.random() - 0.5);
+            currentQuizSet = shuffled.slice(0, 6).map(target => {
+                const distractors = vocabularyData
+                    .filter(w => w.id !== target.id)
+                    .sort(() => Math.random() - 0.5)
+                    .slice(0, 2);
+                const options = [target, ...distractors].sort(() => Math.random() - 0.5);
+                return { target, options };
+            });
+
+            document.getElementById('quizActiveContainer').classList.remove('hidden');
+            document.getElementById('quizResultContainer').classList.add('hidden');
+            renderQuizQuestion();
+        }
+
+        function renderQuizQuestion() {
+            if (!currentQuizSet.length) return;
+            quizAnswered = false;
+            const q = currentQuizSet[currentQuizIdx];
+
+            document.getElementById('quizBadge').textContent = `${q.target.topic} • ${q.target.level}`;
+            document.getElementById('quizCurrentNum').textContent = currentQuizIdx + 1;
+            document.getElementById('quizProgressBar').style.width = `${((currentQuizIdx + 1) / currentQuizSet.length) * 100}%`;
+            
+            document.getElementById('quizVisualBox').innerHTML = renderSpriteHTML(q.target, "shadow-md");
+            document.getElementById('quizQuestionText').textContent = "¿Qué palabra en inglés corresponde a esta escena?";
+
+            const feedback = document.getElementById('quizFeedback');
+            feedback.classList.add('hidden');
+            document.getElementById('quizNextBtn').classList.add('hidden');
+
+            const optionsContainer = document.getElementById('quizOptions');
+            const letters = ['A', 'B', 'C'];
+            optionsContainer.innerHTML = q.options.map((opt, idx) => `
+                <button id="quiz-opt-${idx}" onclick="selectQuizOption(${idx})"
+                    class="w-full p-4 rounded-2xl border-2 border-eduLavender bg-white hover:bg-eduLavenderLight text-left font-bold text-eduNavy flex items-center justify-between transition-all">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-eduLavender text-eduNavy font-bold flex items-center justify-center text-sm shrink-0">
+                            ${letters[idx]}
+                        </span>
+                        <span class="text-base">${opt.en}</span>
+                    </div>
+                    <span class="text-xs font-normal text-slate-400">(${opt.es})</span>
+                </button>
+            `).join('');
+        }
+
+        function selectQuizOption(selectedIdx) {
+            if (quizAnswered) return;
+            quizAnswered = true;
+
+            const q = currentQuizSet[currentQuizIdx];
+            const chosen = q.options[selectedIdx];
+            const isCorrect = chosen.id === q.target.id;
+            if (isCorrect) quizScore++;
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.getElementById(`quiz-opt-${idx}`);
+                btn.disabled = true;
+                btn.classList.remove('hover:bg-eduLavenderLight');
+
+                if (opt.id === q.target.id) {
+                    btn.classList.remove('border-eduLavender', 'bg-white');
+                    btn.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-900');
+                } else if (idx === selectedIdx && !isCorrect) {
+                    btn.classList.remove('border-eduLavender', 'bg-white');
+                    btn.classList.add('border-red-500', 'bg-red-50', 'text-red-900');
+                } else {
+                    btn.classList.add('opacity-50');
+                }
+            });
+
+            const feedback = document.getElementById('quizFeedback');
+            feedback.classList.remove('hidden', 'bg-emerald-50', 'text-emerald-800', 'bg-red-50', 'text-red-800');
+            if (isCorrect) {
+                feedback.classList.add('bg-emerald-50', 'text-emerald-800', 'border', 'border-emerald-200');
+                feedback.innerHTML = `✅ <strong>¡Correcto!</strong> "${q.target.example}"`;
+            } else {
+                feedback.classList.add('bg-red-50', 'text-red-800', 'border', 'border-red-200');
+                feedback.innerHTML = `❌ <strong>La respuesta correcta era: ${q.target.en}</strong> (${q.target.es}).`;
+            }
+
+            const nextBtn = document.getElementById('quizNextBtn');
+            nextBtn.textContent = currentQuizIdx === currentQuizSet.length - 1 ? "Ver mis resultados 🏆" : "Siguiente pregunta ➡️";
+            nextBtn.classList.remove('hidden');
+        }
+
+        function nextQuizQuestion() {
+            if (currentQuizIdx < currentQuizSet.length - 1) {
+                currentQuizIdx++;
+                renderQuizQuestion();
+            } else {
+                showQuizResults();
+            }
+        }
+
+        function showQuizResults() {
+            document.getElementById('quizActiveContainer').classList.add('hidden');
+            document.getElementById('quizResultContainer').classList.remove('hidden');
+
+            document.getElementById('quizFinalScore').textContent = `${quizScore} / ${currentQuizSet.length}`;
+            const emojiEl = document.getElementById('quizFinalEmoji');
+            const rankEl = document.getElementById('quizRankLabel');
+
+            if (quizScore === 6) {
+                emojiEl.textContent = "👑🏆";
+                rankEl.textContent = "Rango: Pathfinder Legendario";
+            } else if (quizScore >= 4) {
+                emojiEl.textContent = "🌟👏";
+                rankEl.textContent = "Rango: Detective Destacado";
+            } else {
+                emojiEl.textContent = "🐶💪";
+                rankEl.textContent = "Rango: Explorer en Entrenamiento";
+            }
+        }
+
+        // =========================================================
+        // PESTAÑA 4: ÁLBUM DE LÁMINAS COMPLETAS
+        // =========================================================
+        function renderAlbum() {
+            const albumGrid = document.getElementById('albumGrid');
+            albumGrid.innerHTML = sheetsInfo.map(sheet => {
+                const wordsInSheet = vocabularyData.filter(w => w.sheet === sheet.file);
+                const imgUrl = sheetUrlMap[sheet.file];
+                return `
+                    <div class="bg-white rounded-2xl border border-eduLavender shadow-sm overflow-hidden flex flex-col">
+                        <div class="p-4 border-b border-eduLavender flex items-center justify-between">
+                            <h3 class="font-bold text-eduNavy text-base">${sheet.title}</h3>
+                            <span class="text-xs font-mono bg-eduLavenderLight text-eduNavy px-2 py-1 rounded-md">${sheet.file}</span>
+                        </div>
+                        <div class="relative bg-eduLavenderLight aspect-[4/3] flex items-center justify-center overflow-hidden">
+                            <div class="text-center p-4 text-xs text-slate-500">
+                                Sube <strong>images/${sheet.file}</strong> o usa el botón verde superior para visualizar esta lámina.
+                            </div>
+                            <img src="${imgUrl}" alt="${sheet.title}" class="absolute inset-0 w-full h-full object-contain bg-white" onerror="this.style.display='none'">
+                        </div>
+                        <div class="p-4 bg-slate-50 flex flex-wrap gap-1.5">
+                            ${wordsInSheet.map(w => `
+                                <span class="text-xs font-semibold bg-white border border-eduLavender text-eduNavy px-2.5 py-1 rounded-lg">
+                                    ${w.en} <span class="text-slate-400 font-normal">(${w.es})</span>
+                                </span>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+    </script>
 </body>
 </html>
