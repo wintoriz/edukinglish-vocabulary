@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edukinglish - Glosario Interactivo</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6fa; color: #333; margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; text-align: center; }
+        h1 { color: #2b497d; margin-bottom: 5px; }
+        p.subtitle { color: #666; margin-bottom: 30px; }
+        
+        /* Barra de búsqueda */
+        .search-box { margin-bottom: 30px; }
+        .search-box input { width: 100%; max-width: 400px; padding: 12px 20px; font-size: 16px; border: 2px solid #dbe2f9; border-radius: 25px; outline: none; transition: 0.3s; }
+        .search-box input:focus { border-color: #2b497d; }
+
+        /* Cuadrícula de tarjetas */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; text-align: left; }
+        .card { background: white; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow: hidden; transition: transform 0.2s; display: flex; flex-direction: column; }
+        .card:hover { transform: translateY(-5px); }
+        
+        .card-img { width: 100%; height: 180px; background-color: #eef2f9; display: flex; align-items: center; justify-content: center; color: #888; font-size: 14px; }
+        /* Si usas las láminas que generamos, puedes poner la URL de la imagen aquí */
+        .card-img img { width: 100%; height: 100%; object-fit: cover; }
+
+        .card-content { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .word-en { font-size: 18px; font-weight: bold; color: #2b497d; margin: 0 0 5px 0; }
+        .word-es { font-size: 15px; color: #555; margin: 0 0 10px 0; }
+        .badge { display: inline-block; background-color: #dbe2f9; color: #2b497d; font-size: 12px; padding: 4px 8px; border-radius: 6px; font-weight: bold; align-self: flex-start; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Edukinglish Vocabulary Hub</h1>
+    <p class="subtitle">Consulta interactiva de las lecciones y láminas oficiales</p>
+
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Busca una palabra (ej. supermarket, budget, heart)..." onkeyup="filterVocabulary()">
+    </div>
+
+    <div class="grid" id="vocabGrid">
+        <!-- Tarjeta de ejemplo 1 -->
+        <div class="card" data-word="supermarket cajero groceries">
+            <div class="card-content">
+                <div>
+                    <span class="badge">The Money Mission</span>
+                    <p class="word-en">SUPERMARKET</p>
+                    <p class="word-es"><strong>Español:</strong> Supermercado</p>
+                </div>
+                <p style="font-size: 13px; color: #777; margin: 10px 0 0 0;">Ej: *Dogito is at the supermarket.*</p>
+            </div>
+        </div>
+
+        <!-- Tarjeta de ejemplo 2 -->
+        <div class="card" data-word="budget presupuestar money">
+            <div class="card-content">
+                <div>
+                    <span class="badge">The Money Mission</span>
+                    <p class="word-en">TO BUDGET</p>
+                    <p class="word-es"><strong>Español:</strong> Presupuestar</p>
+                </div>
+                <p style="font-size: 13px; color: #777; margin: 10px 0 0 0;">Ej: *He tracks expenses on a budget sheet.*</p>
+            </div>
+        </div>
+
+        <!-- Tarjeta de ejemplo 3 -->
+        <div class="card" data-word="goggles laboratorio scientist">
+            <div class="card-content">
+                <div>
+                    <span class="badge">Mad Scientists</span>
+                    <p class="word-en">GOGGLES</p>
+                    <p class="word-es"><strong>Español:</strong> Gafas protectoras</p>
+                </div>
+                <p style="font-size: 13px; color: #777; margin: 10px 0 0 0;">Ej: *Dr. Mooney puts on her goggles.*</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function filterVocabulary() {
+        let input = document.getElementById('searchInput').value.toLowerCase();
+        let cards = document.getElementsByClassName('card');
+
+        for (let i = 0; i < cards.length; i++) {
+            let keywords = cards[i].getAttribute('data-word');
+            let text = cards[i].innerText.toLowerCase();
+            
+            if (keywords.includes(input) || text.includes(input)) {
+                cards[i].style.display = "";
+            } else {
+                cards[i].style.display = "none";
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
