@@ -32,6 +32,15 @@
     </script>
 
     <style>
+/* Ocultar botones administrativos en producción */
+label[for="localLoader"],
+input#localLoader,
+button[onclick*="Modal"],
+button[onclick*="modal"],
+button[onclick*="github"],
+button[onclick*="GitHub"] {
+    display: none !important;
+}
         body {
             background-color: #f4f7fc;
             font-family: 'Inter', sans-serif;
